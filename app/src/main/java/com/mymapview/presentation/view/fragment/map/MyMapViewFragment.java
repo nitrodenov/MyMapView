@@ -33,7 +33,7 @@ public class MyMapViewFragment extends BaseFragment<MyMapPresenter> implements I
     public static final String TAG = MyMapViewFragment.class.getSimpleName();
 
     private MyMapView myMapView;
-    private Cache<Integer, Bitmap> sqlCache;
+    private Cache<Integer, Bitmap> fileCache;
     private BroadcastReceiver connectivityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -48,7 +48,7 @@ public class MyMapViewFragment extends BaseFragment<MyMapPresenter> implements I
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        sqlCache = new FileCache(getContext());
+        fileCache = new FileCache(getContext());
     }
 
     @Nullable
@@ -104,7 +104,7 @@ public class MyMapViewFragment extends BaseFragment<MyMapPresenter> implements I
 
     @Override
     public Bitmap getTileFromLocalStorage(TilePosition tilePosition) {
-        Bitmap bitmap = sqlCache.get(tilePosition.hashCode());
+        Bitmap bitmap = fileCache.get(tilePosition.hashCode());
 
         if (bitmap == null) {
             return null;
@@ -115,7 +115,7 @@ public class MyMapViewFragment extends BaseFragment<MyMapPresenter> implements I
 
     @Override
     public void putTileInLocalStorage(TilePosition tilePosition, Bitmap myBitmap) {
-        sqlCache.put(tilePosition.hashCode(), myBitmap);
+        fileCache.put(tilePosition.hashCode(), myBitmap);
     }
 
     private void initConnectivityReceiver() {
